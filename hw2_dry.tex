@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage{titlesec}
+\usepackage{amsmath}
+
+\title{HW2}
+\author{212783187}
+\renewcommand\thesection{\arabic{section}.}
+\renewcommand\thesubsection{\thesection \arabic{subsection}}
+\begin{document}
+\maketitle{}
+\newpage
+\section{Improved Greedy}
+\subsection{}
+Let's define the search problem (S, O, I, G):
+\begin{itemize}
+\item[S]: The two robots, where each robot is defined by (position on board, battery,  credit, current package, step).\\\\
+Two packages, where each package is defined by (pickup location,  destination location).\\\\
+Two charging stations, where each charging station is defined by (position on board).\\\\
+Maximum step count, defined by a number (maximum step count).\\\\
+Variables:
+\begin{itemize}
+\item position on board: 5x5 tuple. The position on a 5x5 board.
+\item batery: Integer. Battery level of the robot.
+\item credit: Integer. The robots' credits.
+\item current package: package object. current package that the robot carries. If the robot is not carrying a package then it's set to None.
+\item pickup location: 5x5 tuple. The pickup location of a package.
+\item destination location: 5x5 tuple. The destination location of a package.
+\item maximum step count: The maximum steps a robot can make.
+\end{itemize}
+\item[O]:
+$$O = \{\text{move north, move south, move east, move west, pick up, drop off, charge}\}$$
+\item[I]:
+The initial state depends on the specific board. But we do know that in the initial state both robots are not carrying a package, and have a full battery.
+\item[G]:
+The game terminates when any of the following conditions hold:
+\begin{enumerate}
+\item The battery level of at least one robot reaches zero.
+\item The maximum step count is reached.
+\end{enumerate}
+\end{itemize}
+\subsection{}
+The heuristic we implemented priorotises reaching the nearest package and delivering it. If the robot can't get more credit and the oponent picked a package, it tries to sit in the destination of that package so the oponent can't deliver the package. 
+$$h = robot.battery + 4\times robot.credit$$
+$$h += \left\{ \begin{array}{ll}
+nearest\_package\_delivery\_dist -  nearest\_package\_dist,& robot.package = None\\
+credit\_gained\_from\_delivery - dteps\_to\_delivery,& else
+\end{array}\right.$$
+$$h += 1000 \times (10 - opponent\_package\_destination),  if\ cant\_get\_credit\ and\ opponent.package$$
+\subsection{}
+The main drawback of the algorithm in comparrison with minimax is that it only looks one step into the future.  It doesn't take into account the opponent's move.
+\newpage
+\section{RB-Minimax}
+\subsection{}
+In RB-minimax we encounter a tradeoff between using resources to calculate a better heuristic, and searching deeper in the tree.\\\\
+A better heuristic allows us to make a better decision based on the information we got. But the deeper we get in the search tree the more information we have, which helps the heuristic perform better.\\\\
+Therefore, the advantages and disadvantages of using an easier to calculate heuristic, given the harder to calculate heuristic is more informed, are:
+\begin{itemize}
+\item Advantages: Can get deeper in the search tree. The deeper we get in the search tree, the more information we have which helps the heuristic make a better decision.
+\item Disadvantages: Makes a worst evaluation of a given state. It could be that evaluating a deeper node, would give a worst evaluation of the current state than if we used the more informed heuristic on a shallower node.
+\end{itemize}
+\end{document}
